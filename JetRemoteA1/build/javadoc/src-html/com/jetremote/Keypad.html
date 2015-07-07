@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="es">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/** Jet Remote :: JetSki Control System to WaterSportsCenters<a name="line.1"></a>
+<span class="sourceLineNo">002</span>Copyright (C) 2015  Javier Hernández Déniz. :: jetremote.canarias@gmail.com<a name="line.2"></a>
+<span class="sourceLineNo">003</span>    This program is free software: you can redistribute it and/or modify<a name="line.3"></a>
+<span class="sourceLineNo">004</span>    it under the terms of the GNU General Public License as published by<a name="line.4"></a>
+<span class="sourceLineNo">005</span>    the Free Software Foundation, either version 3 of the License, or<a name="line.5"></a>
+<span class="sourceLineNo">006</span>    (at your option) any later version.<a name="line.6"></a>
+<span class="sourceLineNo">007</span>    This program is distributed in the hope that it will be useful,<a name="line.7"></a>
+<span class="sourceLineNo">008</span>    but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.8"></a>
+<span class="sourceLineNo">009</span>    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<a name="line.9"></a>
+<span class="sourceLineNo">010</span>    GNU General Public License for more details.<a name="line.10"></a>
+<span class="sourceLineNo">011</span>    You should have received a copy of the GNU General Public License<a name="line.11"></a>
+<span class="sourceLineNo">012</span>    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.<a name="line.12"></a>
+<span class="sourceLineNo">013</span>**/<a name="line.13"></a>
+<span class="sourceLineNo">014</span>package com.jetremote;<a name="line.14"></a>
+<span class="sourceLineNo">015</span><a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.pi4j.io.gpio.GpioController;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import com.pi4j.io.gpio.GpioFactory;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.pi4j.io.gpio.Pin;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.pi4j.io.gpio.PinMode;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.pi4j.io.gpio.PinPullResistance;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.pi4j.io.gpio.PinState;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import com.pi4j.io.gpio.RaspiPin;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span>public class Keypad {<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>        /** The gpio. */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>   private final static GpioController gpio = GpioFactory.getInstance();<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   <a name="line.30"></a>
+<span class="sourceLineNo">031</span>   /** The COLUMN pins */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   private static final Pin COLUMN_1 = RaspiPin.GPIO_04;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   private static final Pin COLUMN_2 = RaspiPin.GPIO_03;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   private static final Pin COLUMN_3 = RaspiPin.GPIO_02;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   private static final Pin COLUMN_4 = RaspiPin.GPIO_01;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>   <a name="line.36"></a>
+<span class="sourceLineNo">037</span>   /** The Digital COLUMN 1. */<a name="line.37"></a>
+<span class="sourceLineNo">038</span>   private static GpioPinDigitalMultipurpose theCOLUMN_1 = gpio<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                   .provisionDigitalMultipurposePin(COLUMN_1, PinMode.DIGITAL_INPUT);<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>   /** The Digital COLUMN 2. */<a name="line.41"></a>
+<span class="sourceLineNo">042</span>   private static GpioPinDigitalMultipurpose theCOLUMN_2 = gpio<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                   .provisionDigitalMultipurposePin(COLUMN_2, PinMode.DIGITAL_INPUT);<a name="line.43"></a>
+<span class="sourceLineNo">044</span><a name="line.44"></a>
+<span class="sourceLineNo">045</span>   /** The Digital COLUMN 3. */<a name="line.45"></a>
+<span class="sourceLineNo">046</span>   private static GpioPinDigitalMultipurpose theCOLUMN_3 = gpio<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                   .provisionDigitalMultipurposePin(COLUMN_3, PinMode.DIGITAL_INPUT);<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>   /** The Digital COLUMN 4. */<a name="line.49"></a>
+<span class="sourceLineNo">050</span>   private static GpioPinDigitalMultipurpose theCOLUMN_4 = gpio<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                   .provisionDigitalMultipurposePin(COLUMN_4, PinMode.DIGITAL_INPUT);<a name="line.51"></a>
+<span class="sourceLineNo">052</span>   <a name="line.52"></a>
+<span class="sourceLineNo">053</span>   /** The Digital Column Array **/<a name="line.53"></a>
+<span class="sourceLineNo">054</span>   private final static GpioPinDigitalMultipurpose theColumns[] = {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                   theCOLUMN_1,<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                   theCOLUMN_2,<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                   theCOLUMN_3,<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                   theCOLUMN_4<a name="line.58"></a>
+<span class="sourceLineNo">059</span>   };<a name="line.59"></a>
+<span class="sourceLineNo">060</span>   <a name="line.60"></a>
+<span class="sourceLineNo">061</span>   /** The ROW pins */<a name="line.61"></a>
+<span class="sourceLineNo">062</span>   private static final Pin ROW_1 = RaspiPin.GPIO_08;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>   private static final Pin ROW_2 = RaspiPin.GPIO_07;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>   private static final Pin ROW_3 = RaspiPin.GPIO_06;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>   private static final Pin ROW_4 = RaspiPin.GPIO_05;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>   <a name="line.66"></a>
+<span class="sourceLineNo">067</span>   /** The Digital ROW 1. */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>   private static GpioPinDigitalMultipurpose theROW_1 = gpio<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                   .provisionDigitalMultipurposePin(ROW_1, PinMode.DIGITAL_INPUT);<a name="line.69"></a>
+<span class="sourceLineNo">070</span><a name="line.70"></a>
+<span class="sourceLineNo">071</span>   /** The Digital ROW 2. */<a name="line.71"></a>
+<span class="sourceLineNo">072</span>   private static GpioPinDigitalMultipurpose theROW_2 = gpio<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                        .provisionDigitalMultipurposePin(ROW_2, PinMode.DIGITAL_INPUT);<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>   /** The Digital ROW 3. */<a name="line.75"></a>
+<span class="sourceLineNo">076</span>   private static GpioPinDigitalMultipurpose theROW_3 = gpio<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                        .provisionDigitalMultipurposePin(ROW_3, PinMode.DIGITAL_INPUT);<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>   /** The Digital ROW 4. */<a name="line.79"></a>
+<span class="sourceLineNo">080</span>   private static GpioPinDigitalMultipurpose theROW_4 = gpio<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        .provisionDigitalMultipurposePin(ROW_4, PinMode.DIGITAL_INPUT);<a name="line.81"></a>
+<span class="sourceLineNo">082</span>   <a name="line.82"></a>
+<span class="sourceLineNo">083</span>   /** The Digital Row Array **/<a name="line.83"></a>
+<span class="sourceLineNo">084</span>   private final static GpioPinDigitalMultipurpose theRows[] = {<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                   theROW_1,<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                   theROW_2,<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                   theROW_3,<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                   theROW_4<a name="line.88"></a>
+<span class="sourceLineNo">089</span>   };<a name="line.89"></a>
+<span class="sourceLineNo">090</span>   <a name="line.90"></a>
+<span class="sourceLineNo">091</span>   /** The RowId */<a name="line.91"></a>
+<span class="sourceLineNo">092</span>   private static int rowVal;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>   <a name="line.93"></a>
+<span class="sourceLineNo">094</span>   /** The ColId */<a name="line.94"></a>
+<span class="sourceLineNo">095</span>   private static int colVal;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>   <a name="line.96"></a>
+<span class="sourceLineNo">097</span>   <a name="line.97"></a>
+<span class="sourceLineNo">098</span>   /**<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    * Get KEY<a name="line.99"></a>
+<span class="sourceLineNo">100</span>    * @return <a name="line.100"></a>
+<span class="sourceLineNo">101</span>    */<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        static String getKey() {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                // Provisioning and Set all columns as output low<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                for (final GpioPinDigitalMultipurpose myTheCol : theColumns)<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                {<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                        myTheCol.setMode(PinMode.DIGITAL_OUTPUT);<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                        myTheCol.setState(PinState.LOW);<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                }<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                // Provisioning and Set all rows as input pull-up<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                for (final GpioPinDigitalMultipurpose myTheRow : theRows)<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                        myTheRow.setMode(PinMode.DIGITAL_INPUT);<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                        myTheRow.setPullResistance(PinPullResistance.PULL_UP);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                }<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                // Scan rows for pushed key/button<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        // A valid key press should set "rowVal" between 0 and 3.<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                rowVal = -1;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                for (int myR = 0; myR &lt; theRows.length; myR++)<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                {<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                        GpioPinDigitalMultipurpose tmpRead = theRows[myR];<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                        if (tmpRead.isLow()) <a name="line.121"></a>
+<span class="sourceLineNo">122</span>                        {<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                rowVal = myR;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                        }<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                }<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                // if rowVal is not between 0 and 3 then no button was pressed and we can exit<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                if (rowVal &lt; 0 || rowVal &gt; 3)<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                        exit();<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        return null;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                }<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                // Convert columns to input pull-down<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                for (final GpioPinDigitalMultipurpose myTheCol : theColumns)<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                        myTheCol.setMode(PinMode.DIGITAL_INPUT);<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                        myTheCol.setPullResistance(PinPullResistance.PULL_DOWN);<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                }<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                <a name="line.138"></a>
+<span class="sourceLineNo">139</span>                // Switch the i-th row found from scan to output<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                theRows[rowVal].setMode(PinMode.DIGITAL_OUTPUT);<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                theRows[rowVal].setState(PinState.HIGH);<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                <a name="line.142"></a>
+<span class="sourceLineNo">143</span>                // Scan columns for still-pushed key/button<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        // A valid key press should set "colVal"  between 0 and 3.<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        colVal = -1;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>        for (int myC = 0; myC &lt; theColumns.length; myC++)<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                {<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                        GpioPinDigitalMultipurpose tmpRead = theColumns[myC];<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                        if (tmpRead.isHigh()) <a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                                colVal = myC;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        }<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                }<a name="line.153"></a>
+<span class="sourceLineNo">154</span>        // if colVal is not between 0 and 3 then no button was pressed and we can exit<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                if (colVal &lt; 0 || colVal &gt; 3)<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                {<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        exit();<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                        return null;<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                }<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                <a name="line.160"></a>
+<span class="sourceLineNo">161</span>                // Return the value of the key pressed<a name="line.161"></a>
+<span class="sourceLineNo">162</span>        exit();<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        return String.valueOf(rowVal)+String.valueOf(colVal);<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                <a name="line.164"></a>
+<span class="sourceLineNo">165</span>        } // end getKey().<a name="line.165"></a>
+<span class="sourceLineNo">166</span>        <a name="line.166"></a>
+<span class="sourceLineNo">167</span>        <a name="line.167"></a>
+<span class="sourceLineNo">168</span>         private static void exit() {<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                 // Reinitialize all rows and columns as input at exit<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                 for (final GpioPinDigitalMultipurpose myTheRow : theRows)<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        {<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                                myTheRow.setMode(PinMode.DIGITAL_INPUT);<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                                myTheRow.setPullResistance(PinPullResistance.PULL_UP);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        }<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                 for (final GpioPinDigitalMultipurpose myTheColumn : theColumns)<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                        {<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                                myTheColumn.setMode(PinMode.DIGITAL_INPUT);<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                                myTheColumn.setPullResistance(PinPullResistance.PULL_UP);<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                        }<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         }<a name="line.180"></a>
+<span class="sourceLineNo">181</span>          <a name="line.181"></a>
+<span class="sourceLineNo">182</span>}<a name="line.182"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
