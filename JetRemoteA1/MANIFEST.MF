@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: 1.8 (Oracle Corporation)
+Main-Class: com.jetremote.Main
+Class-Path: lib/pi4j-core.jar lib/rxtx-2.2.jar lib/slf4j-api-1.7.12.jar lib/slf4j-nop-1.7.12.jar lib/xbjlib-1.1.0.jar
