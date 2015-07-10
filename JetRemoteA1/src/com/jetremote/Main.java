@@ -121,6 +121,11 @@ public class Main extends Application {
 	String digit = null;
 	
 	while (digit != "none"){
+		 try {
+	            Thread.sleep(50);
+	         } catch (InterruptedException e) {
+	            e.printStackTrace();
+	         }
 		digit = PINMAPPING.get(Keypad.getKey());
 		
 		if(digit!=null){
@@ -150,39 +155,7 @@ public class Main extends Application {
 							};
 							t.run();
 						} else if(serials.get(i).getModel().equals("SEADOO")){
-							Runnable low = new Runnable() {
-								
-								public void run() {
-									try {
-										node.setDIOValue(IOLine.DIO0_AD0, IOValue.LOW);
-									} catch (TimeoutException e) {
-										System.out.print("TimeoutException: Device not found!");
-									} catch (XBeeException e) {
-										e.printStackTrace();
-									}
-								}
-							};
-							low.run();
-							
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
-							
-							Runnable high = new Runnable() {
-								
-								public void run() {
-									try {
-										node.setDIOValue(IOLine.DIO0_AD0, IOValue.HIGH);
-									} catch (TimeoutException e) {
-										System.out.print("TimeoutException: Device not found!");
-									} catch (XBeeException e) {
-										e.printStackTrace();
-									}
-								}
-							};
-							high.run();
+							seadooPerform(node);
 						}
 					}
 				}
@@ -192,13 +165,17 @@ public class Main extends Application {
 				for(int i = 0; i < serials.size(); i++){
 					// If the user select a number then abort 
 					if(selection==null){
-						try {
-							final RemoteXBeeDevice node = getRemoteXbeeDevice(serials.get(i).getFullAddress());
-							node.setDIOValue(IOLine.DIO0_AD0, IOValue.LOW);
-						} catch (TimeoutException e) {
-							System.out.print("TimeoutException: Device not found!");
-						} catch (XBeeException e) {
-							e.printStackTrace();
+						if(serials.get(i).getModel().equals("YAMAHA")){
+							try {
+								final RemoteXBeeDevice node = getRemoteXbeeDevice(serials.get(i).getFullAddress());
+								node.setDIOValue(IOLine.DIO0_AD0, IOValue.HIGH);
+							} catch (TimeoutException e) {
+								System.out.print("TimeoutException: Device not found!");
+							} catch (XBeeException e) {
+								e.printStackTrace();
+							}
+						} else if (serials.get(i).getModel().equals("SEADOO")){
+							seadooPerform(getRemoteXbeeDevice(serials.get(i).getFullAddress()));
 						}
 					}
 				}
@@ -207,13 +184,17 @@ public class Main extends Application {
 				for(int i = 0; i < serials.size(); i++){
 					// If the user select a number then abort 
 					if(selection==null){
-						try {
-							final RemoteXBeeDevice node = getRemoteXbeeDevice(serials.get(i).getFullAddress());
-							node.setDIOValue(IOLine.DIO0_AD0, IOValue.HIGH);
-						} catch (TimeoutException e) {
-							System.out.print("TimeoutException: Device not found!");
-						} catch (XBeeException e) {
-							e.printStackTrace();
+						if(serials.get(i).getModel().equals("YAMAHA")){
+							try {
+								final RemoteXBeeDevice node = getRemoteXbeeDevice(serials.get(i).getFullAddress());
+								node.setDIOValue(IOLine.DIO0_AD0, IOValue.LOW);
+							} catch (TimeoutException e) {
+								System.out.print("TimeoutException: Device not found!");
+							} catch (XBeeException e) {
+								e.printStackTrace();
+							}
+						} else if (serials.get(i).getModel().equals("SEADOO")){
+							seadooPerform(getRemoteXbeeDevice(serials.get(i).getFullAddress()));
 						}
 					}
 				}
@@ -236,39 +217,7 @@ public class Main extends Application {
 							};
 							t.run();
 						} else if(serials.get(i).getModel().equals("SEADOO")){
-							Runnable low = new Runnable() {
-								
-								public void run() {
-									try {
-										node.setDIOValue(IOLine.DIO0_AD0, IOValue.LOW);
-									} catch (TimeoutException e) {
-										System.out.print("TimeoutException: Device not found!");
-									} catch (XBeeException e) {
-										e.printStackTrace();
-									}
-								}
-							};
-							low.run();
-							
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
-							
-							Runnable high = new Runnable() {
-								
-								public void run() {
-									try {
-										node.setDIOValue(IOLine.DIO0_AD0, IOValue.HIGH);
-									} catch (TimeoutException e) {
-										System.out.print("TimeoutException: Device not found!");
-									} catch (XBeeException e) {
-										e.printStackTrace();
-									}
-								}
-							};
-							high.run();
+							seadooPerform(node);
 						}
 					}
 				}
@@ -288,6 +237,42 @@ public class Main extends Application {
 	}
 	
 	launch(args);
+	}
+
+	private static void seadooPerform(RemoteXBeeDevice node) {
+		Runnable high = new Runnable() {
+			
+			public void run() {
+				try {
+					node.setDIOValue(IOLine.DIO0_AD0, IOValue.HIGH);
+				} catch (TimeoutException e) {
+					System.out.print("TimeoutException: Device not found!");
+				} catch (XBeeException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		high.run();
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
+		Runnable low = new Runnable() {
+			
+			public void run() {
+				try {
+					node.setDIOValue(IOLine.DIO0_AD0, IOValue.LOW);
+				} catch (TimeoutException e) {
+					System.out.print("TimeoutException: Device not found!");
+				} catch (XBeeException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		low.run();		
 	}
 
 	private static RemoteXBeeDevice getRemoteXbeeDevice(String s64BitAddress) {

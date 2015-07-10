@@ -1,4 +1,4 @@
-<project name="test-ant-builds" default='all' basedir="." >
+<project name="ant-builds" default='all' basedir="." >
   
    <!-- 
     First define properties, datatypes, and default tasks; then define targets.
@@ -36,10 +36,6 @@
     <exclude name='**/doc-files/'/>
   </fileset>
   
-  <fileset id='test.classes' dir='src'>
-    <include name='**/TEST*.java'/>
-  </fileset>
-
   <!-- Text files using Ant's '@' syntax are here called template files. -->
   <fileset id='template.files' dir='.'>
     <include name='**/*_template.*'/>
@@ -81,19 +77,7 @@
      <echo>Classpath: ${toString:compile.classpath}</echo>
    </target> 
   
-   <target name='test' description='Run all JUnit tests.' depends='compile'>
-     <junit haltonfailure='false'> 
-       <classpath>
-         <pathelement location="src"/>
-       </classpath>
-       <batchtest>
-         <fileset refid='test.classes'/>
-       </batchtest>
-       <formatter type='brief' usefile='no'/>
-     </junit>
-   </target>
-
-   <target name='launch' description='Build and run the program.' depends='compile, test'>
+   <target name='launch' description='Build and run the program.' depends='compile'>
      <java classname='hirondelle.ante.Launcher' classpathref='run.classpath' failonerror='true'>
        <arg value="Solar System"/>
      </java>
@@ -159,7 +143,7 @@
   </target>
   
   <target name='all' description='Create all build artifacts.' 
-             depends='clean, compile, test, jar, javadoc, distro-binary, distro-source'>
+             depends='clean, compile, jar, javadoc, distro-binary, distro-source'>
     <echo>Finished creating all build artifacts.</echo>
   </target>
   
